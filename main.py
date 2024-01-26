@@ -69,14 +69,14 @@ async def vision(bot, message: Message):
         await txt.edit('Formating the Result...')
         await sticker.delete()
         await txt.delete()
-        if response.parts: # handle multiline resps
+        if response.text:
+            print("response: ", response.text)
+            await message.reply(response.text)
+        elif response.parts: # handle multiline resps
            for part in response.parts:
             print("part: ", part)
             await message.reply(part)
             time.sleep(2)
-        elif response.text:
-            print("response: ", response.text)
-            await message.reply(response.text, reply_markup)
         else:
             await message.reply(
                 "Couldn't figure out what's in the Image. Contact @pirate_user for help."
