@@ -11,20 +11,12 @@ from stickers import stickers
 
 load_dotenv()
 
-API_HASH = os.getenv("API_HASH")
-API_ID = os.getenv("API_ID")
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+API_HASH = "95937bcf6bc0938f263fc7ad96959c6d"
+API_ID = 3845818
+BOT_TOKEN = "6358924089:AAF9ruOPppIC-F3z2LwAym-SGqOFsf-cxuM"
+GOOGLE_API_KEY = "AIzaSyA5X_AHEvif0EyIP8_Kx4jCg7lVEsArctQ"
 
-GITHUB_BUTTON = InlineKeyboardMarkup(
-    [
-        [
-            InlineKeyboardButton(
-                "Source Code", url="https://github.com/nuhmanpk/VisionScriptBot"
-            )
-        ]
-    ]
-)
+
 
 app = Client(
     "VisionScriptBot", api_hash=API_HASH, api_id=int(API_ID), bot_token=BOT_TOKEN
@@ -40,7 +32,6 @@ async def start(_, message: Message):
         "I'm here to help. Just send me an image, and I'll do the rest.\n\n"
         "Feel free to explore and use my features. If you have any questions or need assistance, "
         "you can use the /help command.\n\n"
-        "🤖 Don't forget to join @BughunterBots for more awesome bots like me!\n"
     )
     await message.reply(welcome_message, quote=True)
 
@@ -48,10 +39,10 @@ async def start(_, message: Message):
 @app.on_message(filters.command("help") & filters.private)
 async def help_command(_, message: Message):
     help_message = (
-        "🤖 **How to use the Transcription Bot**\n\n"
+        "🤖 **How to use this bot?**\n\n"
         "1. **Send an Image:** Simply send me an image containing text that you want transcribed.\nGot any question regarding the image? add it the image caption before uploading."
         "2. **Wait for Transcription:** I'll process the image and provide you with the transcribed text.\n\n"
-        "For updates and more bots, join @BughunterBots 🚀\n"
+        "Currently in beta stage.\n"
     )
     await message.reply(help_message, quote=True)
 
@@ -68,7 +59,7 @@ async def vision(bot, message: Message):
         file_path = await message.download()
         caption = message.caption
         img = PIL.Image.open(file_path)
-        await txt.edit("Shhh 🤫 , Gemini Vision Pro is At Work ⚠️.\n Pls Wait..")
+        await txt.edit("Shhh 🤫 , **Gemini Vision Pro** is At Work ⚠️.\n Pls Wait..")
         response = (
             model.generate_content([caption, img])
             if caption
@@ -80,35 +71,34 @@ async def vision(bot, message: Message):
         await txt.delete()
         if response.parts: # handle multiline resps
            for part in response.parts:
-            await message.reply(part, reply_markup=GITHUB_BUTTON)
+            print("part: ", part)
+            await message.reply(part)
             time.sleep(2)
         elif response.text:
-            await message.reply(response.text, reply_markup=GITHUB_BUTTON)
+            print("response: ", response.text)
+            await message.reply(response.text, reply_markup)
         else:
             await message.reply(
-                "Couldn't figure out what's in the Image. Contact @bughunter0 for help."
+                "Couldn't figure out what's in the Image. Contact @pirate_user for help."
             )
     except Exception as e:
-        await message.reply("Something Bad occured, Contact @bughunter0")
+        await message.reply("Something Bad occured, Contact @pirate_user")
         raise e
 
 
 @app.on_message(filters.document & filters.private)
 async def document(bot, message: Message):
     await message.reply(
-        "Documents are not supported, Please the File as Image !!!\n\n @BughunterBots"
+        "Documents are not supported, Please send the File as Image !!!"
     )
 
 
 @app.on_message(filters.command("source") & filters.private)
 async def source(bot, message: Message):
     msg = (
-        "Here is the source code for the bot 🚀\n\n"
-        "Follow me for updates , and add Your star if you find this helpful 🌟\n\n"
-        "Thank you for your support! 👏\n\n"
-        "Happy Coding! 🚀"
+        "It's currently closed source project."
     )
-    await message.reply(msg, reply_markup=GITHUB_BUTTON)
+    await message.reply(msg)
 
 
 app.run(print("Bot Started..."))
